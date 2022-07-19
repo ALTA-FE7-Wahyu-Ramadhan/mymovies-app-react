@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Card from '../components/Card'
 import Header from '../components/Header';
+import axios from 'axios';
 
 
 export class HomePage extends Component {
@@ -9,38 +10,7 @@ export class HomePage extends Component {
         title: 'Home Page',
         content: 'This is the home page',
         page: 1,
-        datas: [
-            {
-                id: 1,
-                title: 'Wandavision Season 1 Wandavision Season 1 Wandavision Season 1',
-                image: 'https://timlo.net/wp-content/uploads/2020/10/the-batman-promo-art.jpg'
-            },
-            {
-                id: 2,
-                title: 'Wandavision Season 2',
-                image: 'https://timlo.net/wp-content/uploads/2020/10/the-batman-promo-art.jpg'
-            },
-            {
-                id: 3,
-                title: 'Wandavision Season 3',
-                image: 'https://timlo.net/wp-content/uploads/2020/10/the-batman-promo-art.jpg'
-            },
-            {
-                id: 4,
-                title: 'Wandavision Season 4',
-                image: 'https://timlo.net/wp-content/uploads/2020/10/the-batman-promo-art.jpg'
-            },
-            {
-                id: 5,
-                title: 'Wandavision Season 5',
-                image: 'https://timlo.net/wp-content/uploads/2020/10/the-batman-promo-art.jpg'
-            },
-            {
-                id: 6,
-                title: 'Wandavision Season 6',
-                image: 'https://timlo.net/wp-content/uploads/2020/10/the-batman-promo-art.jpg'
-            },
-        ],
+        datas: [],
         information: {},
         loading: false,
     };
@@ -55,13 +25,31 @@ export class HomePage extends Component {
     componentDidMount() {
         this.fetchData();
     }
-
+//fetch data dengan axios harus menggunakan async await
     async fetchData() {
-        setTimeout(() => {
-            this.setState({
-                title: 'Home Test',
-            }, () => { console.log(this.state.title); });
-        }, 2000);
+        this.setState({loading: true});
+        //untuk key dari API harus diraasiakan dan ditaruh di file .env, pemanggilannya dilakukan dengan cara ${process.env.inisial}
+        await axios.get(`https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&page=1`)
+        //dikasih promise untuk memberitahu user, bahwa berjalan atau tidaknya suatu website
+        .then((response) => {
+            //kita lakukan destructuring untuk memanggil suatu data dari API yang diinginkan, dan digunakan sebagai response
+            const {results}=response.data;
+            //objek data tsb disimpan ke variabel array datas
+            console.log(results)
+            this.setState({datas: results});
+        })
+        .catch((error) => {
+            alert(error.toString());
+        })
+        .finally(() => this.setState({loading: false}));
+        /*
+        await axios.get(`https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&page=1`)
+        .then((response) => {});
+        })
+        .catch((error) => {});
+        })
+        .finally(() => {});
+        */
     }
 
     /*
@@ -81,7 +69,7 @@ export class HomePage extends Component {
                 <p>{this.state.title}</p>
                 <div className='grid grid-flow-row auto-rows-max grid-cols-2 md:grid-cols-4 lg:grid-cols-5 m-2 gap-3'>
                 {this.state.datas.map((data) => (
-                    <Card key={data.id} title={data.title} image={data.image} />
+                    <Card key={data.id} title={data.title} image={data.poster_path} />
                     ))}
                 </div>
             </div>

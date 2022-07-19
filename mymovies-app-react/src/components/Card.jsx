@@ -6,7 +6,7 @@ export class Card extends Component {
     console.log(this.props.title)
     return (
       <div className='flex flex-col justify-between p3 bg-zinc-500 rounded shadow-lg shadow-black'>
-        <img src={this.props.image} alt={this.props.title} height='750' />
+        <img src={this.props.image ?`https://image.tmdb.org/t/p/w500/${this.props.image}`:'https://via.placeholder.com/500x750.png/000000/FFFFFF/%20C/O%20https://placeholder.com/?text=No+image' } alt={this.props.title} height='750' />
         <p className='text-center text-white font-bold'>{this.props.title}</p>
         <Button label='Add to Favorite'/>
       </div>
