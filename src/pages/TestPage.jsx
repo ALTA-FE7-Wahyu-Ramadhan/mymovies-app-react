@@ -1,37 +1,46 @@
-import React, { Component } from 'react'
+import React, { useState} from 'react'
 import Button from '../components/Button'
 import Header from '../components/Header'
 
-export default class TestPage extends Component {
-state={
-    counter:0,
-    email:'',
-    password:'',
-};
+const TestPage =()=> {
+  const [counter, setCounter] = useState (0);
+  const [email, setEmail] = useState ('');
+  const [password, setPassword] = useState ('');
+  const [show, setShow] = useState (true);
 
-  handleSubmit =() => {
-    this.setState({counter:this.state.counter+1})
+  const handleIncrement =() => {
+    setCounter (counter + 1);
   };
+
+  const handleSubmit =(e) => {
+    e.preventDefault();
+    console.log(email, password)
+  }
   
-    render() {
-    return (
-    <div className='bg-black w-full h-screen'>
+  return(
+    <div className='w-full h-screen'>
       <Header/>
-      <p>{this.state.counter}</p>
-      <form>
+        <Button label="INCREMENT" onClick={()=>handleIncrement()}/>
+        {/* <Button label="unHide/Hide" onClick={()=>setShow(!show)}/> */}
+        <Button label="RESET" onClick={()=>setShow(!show)}/>
+      {show && <p>{counter}</p>}
+      <form onSubmit={handleSubmit}>
         <label>
             email: {''}
             <input
-            value={this.state.email} onChange={(e)=>{
-                this.setState({email:e.target.value});
-            console.log(e.target)}}/>
+            value={email} onChange={(e)=>{
+              setEmail(e.target.value);}} />
         </label>
         <label>
-            password: <input value={this.state.password}/>
+            password: {''} 
+            <input value={password} onChange={(e)=>{
+              setPassword(e.target.value);}}
+            />
         </label>
-      <Button label="BUTTON" type='submit'/>
+          <Button label="BUTTON" type='submit'/>
       </form>
     </div>
-    );
-  }
+  );
 }
+
+export default TestPage;

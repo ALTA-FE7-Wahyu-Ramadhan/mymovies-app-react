@@ -1,20 +1,23 @@
-import React, { Component } from 'react'
-import Button from './Button';
+import React from 'react'
 import {Link} from 'react-router-dom';
 
-export class Card extends Component {
-  render() {
+import Button from './Button';
+import { WithRouter } from '../utils/Navigation';
+
+// const Card =(props)=> {
+  //konsep destructuring
+const Card =({data, navigate})=> {
     return (
       <div className='flex flex-col justify-between p3 bg-zinc-500 rounded shadow-lg shadow-black'>
-        <Link to={this.props.navigate}>
-        <img src={this.props.image ?`https://image.tmdb.org/t/p/w500/${this.props.image}`:'https://via.placeholder.com/500x750.png/000000/FFFFFF/%20C/O%20https://placeholder.com/?text=No+image' } alt={this.props.title} height='750' />
-        <p className='text-center text-white font-bold'>{this.props.title}</p>
+        <Link to={`/detail/${data.id}`}>
+        <img src={data.poster_path ?`https://image.tmdb.org/t/p/w500/${data.poster_path}`:'https://via.placeholder.com/500x750.png/000000/FFFFFF/%20C/O%20https://placeholder.com/?text=No+image' } alt={data.title} height='750' />
+        <p className='text-center text-white font-bold'>{data.title}</p>
         </Link>
-        <Button label='Add to Favorite' onClick={this.props.onClick}/>
+        <Button label='Add to Favorite' onClick={()=> navigate(`/detail/${data.id}`)}/>
       </div>
     )
   }
-}
+
 
 /*
 ada 2 macam export:
@@ -26,4 +29,4 @@ ada 2 macam export:
   export { Card, Card2 };
 */
 
-export default Card
+export default WithRouter(Card);

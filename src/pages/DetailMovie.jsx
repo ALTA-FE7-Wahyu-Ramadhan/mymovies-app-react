@@ -1,42 +1,42 @@
-import React, { Component } from 'react'
+import React, { useState,useEffect } from 'react'
 import { WithRouter } from '../utils/Navigation'
 import axios from 'axios';
 import Header from '../components/Header';
 
-class DetailMovie extends Component {
+const DetailMovie =(props)=> {
 
-  state={
-    detailMovie:{}
-  }
+  const [detailMovie, setDetailMovie]=useState({});
+  const [loading, setLoading]=useState(false);
 
-    async componentDidMount(){
-      await this.fetchData();
-    }
+  useEffect(()=> {
+    fetchData();
+  },[]);
 
-    async fetchData(){
-      this.setState({loading: true});
-      const {movie_id} = this.props.params;
+    const fetchData = async (props)=>{
+      setLoading(true);
+      const {movie_id} = props.params;
         await axios
-        .get(`https://api.themoviedb.org/3/movie/${movie_id}?api_key=${process.env.REACT_APP_API_KEY}&language=en-US`)
+        .get(`https://api.themoviedb.org/3/movie/${movie_id}?api_key=${process.env.REACT_APP_API_KEY}&append_to_response=videos`)
         .then((response) => {
             const {data}=response;
-            this.setState({detailMovie: data});
+            setDetailMovie(data);
         })
         .catch((error) => {
             alert(error.toString());
         })
-        .finally(() => this.setState({loading: false}));
+        .finally(() => setLoading(false));
     }
     
-  render() {
-    if (this.state.loading){
+  
+    if (loading){
       return(<div>Loading...</div>)
     }
     return (<div>
-      <Header/>
-      <p>{this.state.detailMovie.title}</p>
-    </div>)
+      <Header />
+      <p>{detailMovie.title}</p>
+      </div>
+      );
   }
-}
+
 
 export default WithRouter(DetailMovie);
