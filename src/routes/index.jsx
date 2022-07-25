@@ -1,15 +1,29 @@
 //folder routes ini dibuat untuk menampung routingannya
-import React, { Component } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {BrowserRouter, Routes, Route } from 'react-router-dom';
+
+import { ThemeContext } from '../utils/context';
 
 import HomePage from '../pages/HomePage';
 import DetailMovie from '../pages/DetailMovie';
 import MyFavorite from '../pages/MyFavorite';
 import TestPage from '../pages/TestPage';
 
-export default class App extends Component {
-  render() {
+const App =()=> {
+  const [theme, setTheme] = useState ('light');
+
+  const background = useMemo(()=> ({theme, setTheme}),[theme])
+
+  useEffect (()=>{
+    if (theme==='dark'){
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+  },[theme]);
+
     return (
+      <ThemeContext.Provider value={background}>
       <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage/>} />
@@ -20,6 +34,8 @@ export default class App extends Component {
         <Route path="*" element={<div>404 Error Not Found</div>} />
       </Routes>
       </BrowserRouter>
+      </ThemeContext.Provider>
     )
-  }
 }
+
+export default App
